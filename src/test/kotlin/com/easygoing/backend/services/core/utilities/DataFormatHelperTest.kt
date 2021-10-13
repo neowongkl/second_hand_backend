@@ -12,6 +12,14 @@ class DataFormatHelperTest{
     @Autowired
     private lateinit var dataFormatHelper: DataFormatHelper
 
+    /**
+     * Dummy data class
+     */
+    data class HongKonger (
+        val age: Int,
+        val name: String // standard getters setters
+    )
+
     @Test
     fun objectToJsonTest(){
         val hongKonger = HongKonger(age = 25, name = "H K")
@@ -29,7 +37,3 @@ class DataFormatHelperTest{
     }
 }
 
-data class HongKonger (
-    val age: Int,
-    val name: String // standard getters setters
-)
