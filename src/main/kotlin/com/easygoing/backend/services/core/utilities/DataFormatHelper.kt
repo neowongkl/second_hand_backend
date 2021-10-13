@@ -11,7 +11,14 @@ class DataFormatHelper {
 
     //TODO("implement logger for exception handling")
 
-    //TODO("josnToObject")
+    fun <T> jsonToObject(json: String, clazz: Class<T>): T?{
+        return runCatching {
+            objectMapper.readValue(json, clazz)
+        }.onFailure { _exception->
+            println(_exception)
+            _exception.printStackTrace()
+        }.getOrNull()
+    }
 
     fun objectToJsonString(targetObject: Any): String?{
         return runCatching {
