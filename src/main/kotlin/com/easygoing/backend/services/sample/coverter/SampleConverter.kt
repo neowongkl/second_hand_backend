@@ -24,10 +24,10 @@ class SampleConverter {
 
     fun requestDtoToDao(source: SampleRequestDto): SampleDao{
         return SampleDao(
-            id = source.sampleInt!!.toLong(),
-            sampleInt = source.sampleInt!!,
-            sampleBoolean = source.sampleBoolean!!,
-            sampleString = source.sampleString!!
+            id = source.sampleInt.toLong(),
+            sampleInt = source.sampleInt,
+            sampleBoolean = source.sampleBoolean,
+            sampleString = source.sampleString
         )
     }
 }
