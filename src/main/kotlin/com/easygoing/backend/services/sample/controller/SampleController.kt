@@ -4,7 +4,10 @@ import com.easygoing.backend.services.sample.dto.SampleRequestDto
 import com.easygoing.backend.services.sample.dto.SampleResponseDto
 import com.easygoing.backend.services.sample.service.SampleService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.MediaType
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("sample")
@@ -28,8 +31,8 @@ class SampleController {
         return sampleService.deleteById(id)
     }
 
-    @RequestMapping(method = [RequestMethod.POST])
-    fun create(@RequestBody samplerRequestDto: SampleRequestDto): SampleResponseDto{
+    @RequestMapping(method = [RequestMethod.POST], consumes = [MediaType.APPLICATION_JSON_VALUE])
+    fun create(@Valid @RequestBody samplerRequestDto: SampleRequestDto): SampleResponseDto{
         return sampleService.create(samplerRequestDto)
     }
 
