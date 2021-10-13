@@ -5,7 +5,6 @@ import com.easygoing.backend.services.sample.dto.SampleResponseDto
 import com.easygoing.backend.services.sample.service.SampleService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
-import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
