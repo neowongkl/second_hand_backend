@@ -1,7 +1,6 @@
 package com.easygoing.backend.services.core.utilities
 
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -54,17 +53,19 @@ class DataFormatHelperTest{
     }
 
     @Test
-    @Disabled
     fun listToJson(){
         val list1 = listOf("one", "two", "three")
         val actualResult= dataFormatHelper.objectToJsonString(list1)
-
+        val expectedResult = "[\"one\",\"two\",\"three\"]"
+        assertEquals(expectedResult, actualResult)
     }
 
     @Test
-    @Disabled
     fun jsonToList(){
-
+        val jsonString = "[\"one\",\"two\",\"three\"]"
+        val actualResult = dataFormatHelper.jsonToObject(jsonString, List::class.java)
+        val expectedResult = arrayListOf("one", "two", "three")
+        assertEquals(expectedResult, actualResult)
     }
 }
 
