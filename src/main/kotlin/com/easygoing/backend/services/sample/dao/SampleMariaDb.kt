@@ -1,15 +1,13 @@
 package com.easygoing.backend.services.sample.dao
 
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "sample_maria_db")
 data class SampleMariaDb (
         @Id
-        var id : Long,
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        var id : Long? = null,
 
         @Column(name = "sample_string", nullable = false, length = 255)
         var sampleString : String
