@@ -18,19 +18,16 @@ class SampleMariaDbController {
         return sampleMariaDbService.listAll()
     }
 
-    //TODO getbyid
     @RequestMapping(value = ["/{id}"], method = [RequestMethod.GET])
     fun getById(@PathVariable(value = "id") id: Long) : SampleMariaDbResponseDto?{
         return sampleMariaDbService.findById(id)
     }
 
-    //TODO create
     @RequestMapping(method = [RequestMethod.POST])
     fun create(@RequestBody sampleMariaDbRequestDto: SampleMariaDbRequestDto): SampleMariaDbResponseDto{
         return sampleMariaDbService.create(sampleMariaDbRequestDto)
     }
 
-    //TODO delete
     @RequestMapping(value = ["/{id}"], method = [RequestMethod.DELETE])
     fun deleteById(@PathVariable(value = "id")id: Long): SampleMariaDbResponseDto?{
         return sampleMariaDbService.deleteById(id)

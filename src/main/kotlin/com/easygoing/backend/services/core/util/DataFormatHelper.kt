@@ -9,7 +9,7 @@ class DataFormatHelper {
     @Autowired
     private lateinit var objectMapper : ObjectMapper
 
-    //TODO("implement logger for exception handling")
+    // TODO("implement logger for exception handling")
 
     fun <T> jsonToObject(json: String, clazz: Class<T>): T?{
         return runCatching {
