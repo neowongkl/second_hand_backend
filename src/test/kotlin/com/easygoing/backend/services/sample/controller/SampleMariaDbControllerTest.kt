@@ -23,16 +23,11 @@ class SampleMariaDbControllerTest {
 
     val url = "http://localhost:8080/api/samplemaria"
 
-    var dummyId = 0L
-
     @Test
     fun listAll() {
         val responseEntity = restTemplate()!!.getForEntity(url, Array<SampleMariaDb>::class.java)
         assertEquals(HttpStatus.OK, responseEntity.statusCode)
         assertNotNull(responseEntity.body)
-        responseEntity.body?.let {
-            dummyId = it[0].id ?: -1
-        }
     }
 
     @Test
