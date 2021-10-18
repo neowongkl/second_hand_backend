@@ -28,6 +28,7 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 //	Database
 	implementation("org.mariadb.jdbc:mariadb-java-client:2.7.4")
+	implementation("mysql:mysql-connector-java:8.0.26")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

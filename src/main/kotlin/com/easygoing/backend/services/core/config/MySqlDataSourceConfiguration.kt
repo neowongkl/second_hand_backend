@@ -1,7 +1,7 @@
 package com.easygoing.backend.services.core.config
 
 import com.easygoing.backend.services.BackendApplication
-import com.easygoing.backend.services.core.annotations.MariaDbDataSource
+import com.easygoing.backend.services.core.annotations.MySqlDataSource
 import com.zaxxer.hikari.HikariDataSource
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -11,7 +11,6 @@ import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Primary
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.orm.jpa.JpaTransactionManager
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
@@ -22,19 +21,19 @@ import javax.sql.DataSource
 
 @Configuration
 @ConditionalOnProperty(
-    value = ["datasource.mariadb.enable"],
+    value = ["datasource.mysql.enable"],
     havingValue = "true",
     matchIfMissing = false
 )
 @EnableJpaRepositories(
     basePackageClasses = [BackendApplication::class],
-    transactionManagerRef = "mariaDbTransactionManager",
-    entityManagerFactoryRef = "mariaDbEntityManagerFactory",
-    includeFilters = [ComponentScan.Filter(MariaDbDataSource::class)],
+    transactionManagerRef = "mySqlTransactionManager",
+    entityManagerFactoryRef = "mySqlEntityManagerFactory",
+    includeFilters = [ComponentScan.Filter(MySqlDataSource::class)],
 )
-@ConfigurationProperties(prefix = "datasource.mariadb")
+@ConfigurationProperties(prefix = "datasource.mysql")
 @EnableTransactionManagement
-class MariaDbDataSourceConfiguration {
+class MySqlDataSourceConfiguration {
 
     lateinit var url : String
     lateinit var username: String
@@ -42,9 +41,8 @@ class MariaDbDataSourceConfiguration {
     lateinit var driverClassName: String
     lateinit var dialect: String
 
-    @Primary
     @Bean
-    fun mariaDbDataSource(): DataSource {
+    fun mySqlDataSource(): DataSource {
         return DataSourceBuilder.create()
             .type(HikariDataSource::class.java)
             .url(url)
@@ -54,26 +52,24 @@ class MariaDbDataSourceConfiguration {
             .build()
     }
 
-    @Primary
     @Bean
-    fun mariaDbEntityManagerFactory(
+    fun mySqlEntityManagerFactory(
         builder: EntityManagerFactoryBuilder,
-        @Qualifier("mariaDbDataSource") dataSource: DataSource
+        @Qualifier("mySqlDataSource") dataSource: DataSource
     ): LocalContainerEntityManagerFactoryBean {
         return builder
             .dataSource(dataSource)
             .packages(BackendApplication::class.java)
-            .persistenceUnit("mariaDb")
+            .persistenceUnit("mySql")
             .properties(mapOf(Pair("hibernate.dialect", dialect)))
             .build()
     }
 
-    @Primary
     @Bean
-    fun mariaDbTransactionManager(
-        @Qualifier("mariaDbEntityManagerFactory") mariaDbEntityManagerFactory: EntityManagerFactory
+    fun mySqlTransactionManager(
+        @Qualifier("mySqlEntityManagerFactory") mySqlEntityManagerFactory: EntityManagerFactory
     ): PlatformTransactionManager {
-        return JpaTransactionManager(mariaDbEntityManagerFactory)
+        return JpaTransactionManager(mySqlEntityManagerFactory)
     }
 
 }
