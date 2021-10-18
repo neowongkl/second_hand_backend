@@ -1,11 +1,14 @@
 package com.easygoing.backend.services.core.config
 
 import com.easygoing.backend.services.BackendApplication
+import com.easygoing.backend.services.core.annotations.MariaDbDataSource
+import com.zaxxer.hikari.HikariDataSource
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.orm.jpa.JpaTransactionManager
@@ -19,15 +22,29 @@ import javax.sql.DataSource
 @EnableJpaRepositories(
     basePackageClasses = [BackendApplication::class],
     transactionManagerRef = "mariaDbTransactionManager",
-    entityManagerFactoryRef = "mariaDbEntityManagerFactory"
+    entityManagerFactoryRef = "mariaDbEntityManagerFactory",
+    includeFilters = [ComponentScan.Filter(MariaDbDataSource::class)]
 )
+@ConfigurationProperties(prefix = "datasource.mariadb")
 @EnableTransactionManagement
 class MariaDbDataSourceConfiguration {
 
+    lateinit var url : String
+    lateinit var username: String
+    lateinit var password: String
+    lateinit var driverClassName: String
+    lateinit var dialect: String
+
+
     @Bean
-    @ConfigurationProperties(prefix = "datasource.mariadb")
     fun mariaDbDataSource(): DataSource {
-        return DataSourceBuilder.create().build()
+        return DataSourceBuilder.create()
+            .type(HikariDataSource::class.java)
+            .url(url)
+            .username(username)
+            .password(password)
+            .driverClassName(driverClassName)
+            .build()
     }
 
     @Bean
@@ -39,7 +56,7 @@ class MariaDbDataSourceConfiguration {
             .dataSource(dataSource)
             .packages(BackendApplication::class.java)
             .persistenceUnit("mariaDb")
-            .properties(mapOf(Pair("hibernate.dialect","org.hibernate.dialect.MariaDB103Dialect")))
+            .properties(mapOf(Pair("hibernate.dialect", dialect)))
             .build()
     }
 
