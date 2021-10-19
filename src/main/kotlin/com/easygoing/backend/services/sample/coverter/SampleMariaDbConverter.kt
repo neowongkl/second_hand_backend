@@ -14,7 +14,11 @@ class SampleMariaDbConverter {
     fun daoToResponseDto(source: SampleMariaDb): SampleMariaDbResponseDto{
         return SampleMariaDbResponseDto(
             id = source.id!!,
-            sampleString = source.sampleString
+            sampleString = source.sampleString,
+            createdBy = source.createdBy,
+            createdOn = source.createdOn.toString(),
+            lastModifiedBy = source.lastModifiedBy,
+            lastModifiedDate = source.lastModifiedDate.toString()
         )
     }
 

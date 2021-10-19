@@ -1,5 +1,6 @@
 package com.easygoing.backend.services.sample.dao
 
+import com.easygoing.backend.services.core.dao.AuditableEntity
 import javax.persistence.*
 
 @Entity
@@ -11,4 +12,4 @@ data class SampleMariaDb (
 
         @Column(name = "sample_string", nullable = false, length = 255)
         var sampleString : String
-)
+) : AuditableEntity()
