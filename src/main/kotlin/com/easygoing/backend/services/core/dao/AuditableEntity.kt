@@ -29,6 +29,7 @@ abstract class AuditableEntity {
     lateinit var lastModifiedBy : String
 
     @LastModifiedDate
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "last_modified_date", nullable = false)
     lateinit var lastModifiedDate: LocalDateTime
 }
