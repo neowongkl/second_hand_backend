@@ -73,6 +73,24 @@ class RestHelperImpl: RestHelper {
         }.getOrNull()
     }
 
+    override fun delete(url: String): Boolean? {
+        return runCatching {
+            webClientSync.delete()
+                .uri(url)
+                .exchangeToMono { response->
+                    if (response.statusCode().is2xxSuccessful){
+                        return@exchangeToMono Mono.just(true)
+                    }else{
+                        return@exchangeToMono Mono.just(false)
+                    }
+                }
+                .block(webClientSyncConfiguration.timeout)
+        }.onFailure { _exception->
+            println(_exception)
+            _exception.printStackTrace()
+        }.getOrNull()
+    }
+
     override fun <T> patchForEntity(url: String, bodyObject: Any, responseClass: Class<T>) : T?{
         return runCatching {
             webClientSync.patch()
