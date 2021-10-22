@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.web.client.RestTemplate
 
 @SpringBootTest
 class RestHelperTest {
@@ -64,6 +65,14 @@ class RestHelperTest {
     }
 
     @Test
+    fun doDeleteBooleanTest(){
+        val url = "https://jsonplaceholder.typicode.com/posts/1"
+        val entity = restHelper.delete(url)
+        Assertions.assertNotNull(entity)
+        Assertions.assertTrue(entity!!)
+    }
+
+    @Test
     fun doPatchEntityTest(){
         val url = "https://jsonplaceholder.typicode.com/posts/1"
         val body = Post(
@@ -75,5 +84,7 @@ class RestHelperTest {
         val entity = restHelper.patchForEntity(url, body, Post::class.java)
         Assertions.assertEquals(body, entity)
     }
+
+
 
 }
