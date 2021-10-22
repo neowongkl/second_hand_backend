@@ -1,6 +1,7 @@
 package com.easygoing.backend.services.core.util
 
 import com.easygoing.backend.services.core.config.WebClientSyncConfiguration
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
@@ -9,7 +10,7 @@ import reactor.core.publisher.Mono
 @Service
 class RestHelperImpl: RestHelper {
 
-    //TODO add logger
+    private val logger = LoggerFactory.getLogger(RestHelper::class.java)
     //TODO add 4xx & 5xx handler
 
     @Autowired
@@ -31,7 +32,8 @@ class RestHelperImpl: RestHelper {
                 }
                 .block(webClientSyncConfiguration.timeout)
         }.onFailure { _exception->
-            println(_exception)
+            logger.error("fail in get entity request, url: $url")
+            logger.error(_exception.toString())
             _exception.printStackTrace()
         }.getOrNull()
     }
@@ -50,7 +52,8 @@ class RestHelperImpl: RestHelper {
                 }
                 .block(webClientSyncConfiguration.timeout)
         }.onFailure { _exception->
-            println(_exception)
+            logger.error("fail in post entity request, url: $url")
+            logger.error(_exception.toString())
             _exception.printStackTrace()
         }.getOrNull()
     }
@@ -68,7 +71,8 @@ class RestHelperImpl: RestHelper {
                 }
                 .block(webClientSyncConfiguration.timeout)
         }.onFailure { _exception->
-            println(_exception)
+            logger.error("fail in delete request, url: $url")
+            logger.error(_exception.toString())
             _exception.printStackTrace()
         }.getOrNull()
     }
@@ -86,7 +90,8 @@ class RestHelperImpl: RestHelper {
                 }
                 .block(webClientSyncConfiguration.timeout)
         }.onFailure { _exception->
-            println(_exception)
+            logger.error("fail in delete request, url: $url")
+            logger.error(_exception.toString())
             _exception.printStackTrace()
         }.getOrNull()
     }
@@ -104,9 +109,10 @@ class RestHelperImpl: RestHelper {
                     }
                 }
                 .block(webClientSyncConfiguration.timeout)
-        }.onFailure { _exceptin->
-            println(_exceptin)
-            _exceptin.printStackTrace()
+        }.onFailure { _exception->
+            logger.error("fail in patch request, url: $url")
+            logger.error(_exception.toString())
+            _exception.printStackTrace()
         }.getOrNull()
     }
 }
