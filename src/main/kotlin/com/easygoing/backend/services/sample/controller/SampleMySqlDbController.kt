@@ -12,14 +12,11 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping(value = ["samplemysql"])
 class SampleMySqlDbController {
 
-    private val logger = LoggerFactory.getLogger(SampleController::class.java)
-
     @Autowired
     private lateinit var sampleMySqlDbService: SampleMySqlDbService
 
     @RequestMapping(method = [RequestMethod.GET])
     fun listAll(): List<SampleMySqlDb>{
-        logger.info("request in")
         return sampleMySqlDbService.listAll()
     }
 
