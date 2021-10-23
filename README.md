@@ -7,5 +7,8 @@
   - set "server.servlet.context-path"
 
 ## Datasource Setup
-1. In application.properties, enable required datasource, default is mariaDb
+Supported datasource: mariaDb, mySql
+1. In application.properties, enable required datasource, eg, datasource.mariadb.enable=true
 2. Add target datasource annotation to repository class
+3. inherit AuditableEntity to create dao for autofill createdBy, createdOn, lastModifiedBy, lastModifiedDate
+
