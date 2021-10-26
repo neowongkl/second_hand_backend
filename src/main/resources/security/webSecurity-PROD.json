@@ -1,0 +1,12 @@
+{
+  "corsMappings": [
+    {
+      "path" : "/**",
+      "allowedOrigins": ["*"],
+      "allowedHeaders": ["*"],
+      "allowedMethods": ["*"],
+      "allowCredentials": true,
+      "exposedHeaders": ["*"]
+    }
+  ]
+}

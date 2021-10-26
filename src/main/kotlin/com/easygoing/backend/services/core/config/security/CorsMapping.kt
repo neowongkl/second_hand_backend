@@ -1,0 +1,10 @@
+package com.easygoing.backend.services.core.config.security
+
+data class CorsMapping (
+    val path : String,
+    val allowedOrigins: List<String>,
+    val allowedHeaders: List<String>,
+    val allowedMethods: List<String>,
+    val allowCredentials: Boolean,
+    val exposedHeaders: List<String>
+)

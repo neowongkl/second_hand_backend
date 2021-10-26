@@ -12,3 +12,6 @@ Supported datasource: mariaDb, mySql
 2. Add target datasource annotation to repository class
 3. inherit AuditableEntity to create dao for autofill createdBy, createdOn, lastModifiedBy, lastModifiedDate
 
+## Security Setting
+### Cors
+Edit webSecurity-{env}.json to set CORS security mapping~~
