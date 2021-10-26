@@ -24,9 +24,9 @@ class CorsConfiguration {
     @PostConstruct
     fun postConstruct(){
         val activeProfile = systemHelper.getActiveProfile()
-        webSecurity = ClassPathResource("security/webSecurity-$activeProfile.json").inputStream.use {
-            String(it.readBytes(), Charsets.UTF_8)
-        }.let { dataFormatHelper.jsonToObject(it, WebSecurity::class.java) }
+        webSecurity = ClassPathResource("security/webSecurity-$activeProfile.json").file.let {
+            dataFormatHelper.jsonFileToObject(it, WebSecurity::class.java)
+        }
     }
 
     @Bean
