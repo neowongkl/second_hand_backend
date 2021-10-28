@@ -3,6 +3,7 @@ package com.easygoing.backend.services.core.config.security
 import com.easygoing.backend.services.core.util.DataFormatHelper
 import com.easygoing.backend.services.core.util.SystemHelper
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.ClassPathResource
@@ -11,6 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import javax.annotation.PostConstruct
 
 @Configuration
+@ConfigurationProperties(prefix = "webserity.cors")
 class CorsConfiguration {
 
     @Autowired
@@ -21,10 +23,12 @@ class CorsConfiguration {
 
     private var webSecurity: WebSecurity? = null
 
+    lateinit var mappingpath : String
+
     @PostConstruct
     fun postConstruct(){
         val activeProfile = systemHelper.getActiveProfile()
-        webSecurity = ClassPathResource("security/webSecurity-$activeProfile.json").file.let {
+        webSecurity = ClassPathResource(mappingpath).file.let {
             dataFormatHelper.jsonFileToObject(it, WebSecurity::class.java)
         }
     }
