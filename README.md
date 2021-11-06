@@ -13,5 +13,9 @@ Supported datasource: mariaDb, mySql
 3. inherit AuditableEntity to create dao for autofill createdBy, createdOn, lastModifiedBy, lastModifiedDate
 
 ## Security Setting
+Edit webSecurity-{env}.json 
 ### Cors
-Edit webSecurity-{env}.json to set CORS security mapping~~
+set mapping in json
+### Jwt & User
+- set enable jwt and user
+- customize user model for every project
