@@ -7,7 +7,7 @@ import javax.persistence.*
 data class SampleMySqlDb (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id : Long? = null,
+    var id : Long = 0,
 
     @Column(name = "my_string", nullable = false, length = 255)
     var myString : String

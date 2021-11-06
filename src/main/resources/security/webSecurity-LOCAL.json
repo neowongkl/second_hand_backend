@@ -8,5 +8,10 @@
       "allowCredentials": true,
       "exposedHeaders": ["*"]
     }
-  ]
+  ],
+  "jwt": {
+    "enable": true,
+    "secretKey": "VGhlRW5jb2RlQmFzZTY0TXVzdEJlR3JlYXRlclRoYW4yNTZCaXQhISE=",
+    "expiryInMinutes": 90
+  }
 }

@@ -8,7 +8,7 @@ import javax.persistence.*
 data class SampleMariaDb (
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        var id : Long? = null,
+        var id : Long = 0,
 
         @Column(name = "sample_string", nullable = false, length = 255)
         var sampleString : String

@@ -1,7 +1,7 @@
 package com.easygoing.backend.services.core.config.security
 
+import com.easygoing.backend.services.core.config.security.dto.WebSecurity
 import com.easygoing.backend.services.core.util.DataFormatHelper
-import com.easygoing.backend.services.core.util.SystemHelper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -18,16 +18,12 @@ class CorsConfiguration {
     @Autowired
     private lateinit var dataFormatHelper: DataFormatHelper
 
-    @Autowired
-    private lateinit var systemHelper: SystemHelper
-
     private var webSecurity: WebSecurity? = null
 
     lateinit var mappingpath : String
 
     @PostConstruct
     fun postConstruct(){
-        val activeProfile = systemHelper.getActiveProfile()
         webSecurity = ClassPathResource(mappingpath).file.let {
             dataFormatHelper.jsonFileToObject(it, WebSecurity::class.java)
         }
