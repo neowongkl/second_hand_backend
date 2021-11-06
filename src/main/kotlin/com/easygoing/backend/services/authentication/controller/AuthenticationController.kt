@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
+import javax.validation.Valid
 
 @RestController
 @RequestMapping(value = ["authentication"])
@@ -23,7 +24,7 @@ class AuthenticationController {
     }
 
     @RequestMapping(value = ["register"], method = [RequestMethod.POST])
-    fun register(@RequestBody registerRequest: RegisterRequest): Boolean{
+    fun register(@Valid @RequestBody registerRequest: RegisterRequest): Boolean{
         return authenticationService.register(registerRequest)
     }
 
