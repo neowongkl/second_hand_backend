@@ -1,19 +1,22 @@
 package com.easygoing.backend.services.core.config.security.util
 
-import io.jsonwebtoken.Claims
-import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.*
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
 import java.security.Key
+import java.security.SignatureException
 import java.sql.Timestamp
 import java.time.LocalDateTime
 import javax.annotation.PostConstruct
 
 @Component
 class JwtUtil {
+
+    private val logger = LoggerFactory.getLogger(this.javaClass)
 
     @Autowired
     private lateinit var securityUtil: SecurityUtil
@@ -79,8 +82,22 @@ class JwtUtil {
         return Keys.hmacShaKeyFor(keyBytes)
     }
 
-    fun validateToken(token: String, userDetails: UserDetails): Boolean? {
-        val username = extractUserName(token)
-        return username == userDetails.username && !isTokenExpired(token)
+    fun validateToken(token: String): Boolean {
+        val key = getSecretKey()
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token)
+            return true
+        }catch (e: SignatureException) {
+            logger.error("Invalid JWT signature");
+        } catch (e: MalformedJwtException) {
+            logger.error("Invalid JWT token");
+        } catch (e: ExpiredJwtException) {
+            logger.error("Expired JWT token");
+        } catch (e: UnsupportedJwtException) {
+            logger.error("Unsupported JWT token");
+        } catch (e: IllegalArgumentException) {
+            logger.error("JWT claims string is empty.");
+        }
+        return false
     }
 }

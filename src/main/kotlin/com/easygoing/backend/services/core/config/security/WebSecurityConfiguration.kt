@@ -1,5 +1,6 @@
 package com.easygoing.backend.services.core.config.security
 
+import com.easygoing.backend.services.core.config.security.entrypoint.JwtAuthenticationEntryPoint
 import com.easygoing.backend.services.core.config.security.filter.JwtRequestFilter
 import com.easygoing.backend.services.core.config.security.util.SecurityUtil
 import com.easygoing.backend.services.user.service.CustomUserDetailsService
@@ -8,6 +9,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
@@ -19,24 +21,38 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(
+    securedEnabled = true,
+    jsr250Enabled = true,
+    prePostEnabled = true,
+)
 class WebSecurityConfiguration: WebSecurityConfigurerAdapter() {
 
     @Autowired
     private lateinit var jwtRequestFilter: JwtRequestFilter
 
     @Autowired
+    private lateinit var jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint
+
+    @Autowired
     private lateinit var securityUtil: SecurityUtil
 
-    //restirction up to down, heavy to less
     override fun configure(http: HttpSecurity?) {
         http?.also { _http->
             if (securityUtil.jwt.enable){
-                _http.csrf().disable()
+                _http
+                    .csrf()
+                        .disable()
+                    .exceptionHandling()//response to unauthorized access
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                        .and()
+                    .sessionManagement()
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        .and()
                     .authorizeRequests()
-                    .antMatchers("/authentication/**").permitAll()
-                    .anyRequest().authenticated()
-                    .and().sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        .antMatchers("/authentication/**").permitAll()
+                    .anyRequest()
+                        .authenticated()
 
                 _http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter::class.java)
 

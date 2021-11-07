@@ -21,20 +21,25 @@ class JwtRequestFilter : OncePerRequestFilter() {
     @Autowired
     private lateinit var customUserDetailsService: CustomUserDetailsService
 
+    private fun getJwtFromRequest(request: HttpServletRequest): String?{
+        val authorizationHeader = request.getHeader("Authorization")
+        if ( authorizationHeader!= null && authorizationHeader.startsWith("Bearer ") ){
+            return authorizationHeader.substring(7)
+        }
+        return null
+    }
+
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val authorizationHeader = request.getHeader("Authorization")
-        if ( authorizationHeader!= null && authorizationHeader.startsWith("Bearer ") ){
-            val jwt = authorizationHeader.substring(7)
+        val jwt = getJwtFromRequest(request)
+        if ( jwt != null && jwtUtil.validateToken(jwt)){
             val userName = jwtUtil.extractUserName(jwt)
-
-            if(SecurityContextHolder.getContext().authentication == null){
-                val userDetails = customUserDetailsService.loadUserByUsername(userName)
-                if ( userDetails != null && jwtUtil.validateToken(jwt, userDetails) == true ){
-                    val token = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
+            if (SecurityContextHolder.getContext().authentication == null ){
+                customUserDetailsService.loadUserByUsername(userName)?.let { _userDetails->
+                    val token = UsernamePasswordAuthenticationToken(_userDetails, null, _userDetails.authorities)
                     token.details = WebAuthenticationDetailsSource().buildDetails(request)
                     SecurityContextHolder.getContext().authentication = token
                 }

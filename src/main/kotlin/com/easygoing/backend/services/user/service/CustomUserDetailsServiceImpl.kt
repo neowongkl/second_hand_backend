@@ -20,28 +20,35 @@ class CustomUserDetailsServiceImpl: CustomUserDetailsService {
     @Autowired
     private lateinit var userConverter: UserConverter
 
-    override fun loadUserByUsername(username: String?): UserDetails? {
-        if (username == null) {
+    override fun loadUserByUsername(usernameOrEmail: String?): UserDetails? {
+        if (usernameOrEmail == null) {
             logger.error("username is null")
             return null
         }
-        val userDao = userRepository.findByusername(username) ?: throw UsernameNotFoundException("username: $username is not found")
+        val userDao = userRepository.findByusernameOrEmail(usernameOrEmail, usernameOrEmail) ?: throw UsernameNotFoundException("username/email: $usernameOrEmail is not found")
         return userConverter.userDaoToCustomUserDetail(userDao)
     }
 
     override fun isValidUserName(username: String): Boolean{
-        return userRepository.findByusername(username)?.let {
-            logger.error("Invalid username, duplicate username")
+        return takeIf { userRepository.existsByusername(username) }?.let {
+            logger.error("username is already taken")
             false
         }?: true
     }
 
-    override fun createUser(userDao: UserDao): Boolean {
+    override fun isValidEmail(email: String): Boolean{
+        return takeIf { userRepository.existsByemail(email) }?.let {
+            logger.error("email is already in use")
+            false
+        }?: true
+    }
+
+    override fun createUser(userDao: UserDao) {
         if (!isValidUserName(userDao.username)){
-            return false
+            return
         }
        userRepository.save(userDao)
-        return true
+        return
     }
 
 }

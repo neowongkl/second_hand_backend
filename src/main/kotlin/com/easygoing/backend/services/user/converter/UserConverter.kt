@@ -13,6 +13,7 @@ class UserConverter {
             password = userDao.password,
             authorities = userDao.authorities.map { it.authority },
             enable = userDao.enable,
+            email = userDao.email
         )
     }
 

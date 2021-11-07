@@ -8,9 +8,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
 interface CustomUserDetailsService : UserDetailsService {
 
     @Throws(UsernameNotFoundException::class)
-    override fun loadUserByUsername(username: String?): UserDetails?
+    override fun loadUserByUsername(usernameOrEmail: String?): UserDetails?
 
     fun isValidUserName(username: String): Boolean
+    fun isValidEmail(email: String): Boolean
 
-    fun createUser(userDao: UserDao): Boolean
+    fun createUser(userDao: UserDao)
 }

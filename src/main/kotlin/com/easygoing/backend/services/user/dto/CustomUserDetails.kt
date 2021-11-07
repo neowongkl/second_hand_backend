@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails
 
 class CustomUserDetails(
     val userId: Long?,
+    val email: String,
     private val username: String,
     private val password: String,
     private val authorities: List<String>,

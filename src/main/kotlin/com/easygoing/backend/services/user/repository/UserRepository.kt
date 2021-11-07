@@ -9,4 +9,8 @@ import org.springframework.stereotype.Repository
 @MariaDbDataSource
 interface UserRepository: JpaRepository<UserDao, Long> {
     fun findByusername(userName: String) : UserDao?
+    fun findByusernameOrEmail(username: String, email: String) : UserDao?
+    fun existsByusername(userName: String): Boolean
+    fun findByemail(email: String): UserDao?
+    fun existsByemail(email: String): Boolean
 }

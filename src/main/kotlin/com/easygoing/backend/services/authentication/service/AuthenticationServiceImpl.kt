@@ -4,10 +4,12 @@ import com.easygoing.backend.services.authentication.converter.AuthenticationCon
 import com.easygoing.backend.services.authentication.dto.AuthenticationRequest
 import com.easygoing.backend.services.authentication.dto.AuthenticationResponse
 import com.easygoing.backend.services.authentication.dto.RegisterRequest
+import com.easygoing.backend.services.authentication.dto.RegisterResponse
 import com.easygoing.backend.services.core.config.security.util.JwtUtil
 import com.easygoing.backend.services.user.service.CustomUserDetailsService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.stereotype.Service
@@ -32,7 +34,7 @@ class AuthenticationServiceImpl: AuthenticationService {
     override fun authenticate(authenticationRequest: AuthenticationRequest): AuthenticationResponse?{
         try {
             authenticationManager.authenticate(
-                UsernamePasswordAuthenticationToken(authenticationRequest.username, authenticationRequest.password)
+                UsernamePasswordAuthenticationToken(authenticationRequest.usernameOrEmail, authenticationRequest.password)
             )
         }catch (e: Exception){
             logger.error(e.message)
@@ -40,15 +42,22 @@ class AuthenticationServiceImpl: AuthenticationService {
             throw Exception("Incorrect username/password")
         }
 
-        return customUserDetailsService.loadUserByUsername(authenticationRequest.username)?.let { _userDetail ->
+        return customUserDetailsService.loadUserByUsername(authenticationRequest.usernameOrEmail)?.let { _userDetail ->
             jwtUtil.generateToken(_userDetail)?.let { _jwt->
                 AuthenticationResponse(_jwt)
             }
         }
     }
 
-    override fun register(registerRequest: RegisterRequest): Boolean{
+    override fun register(registerRequest: RegisterRequest): ResponseEntity<RegisterResponse>{
+        if ( !customUserDetailsService.isValidUserName(registerRequest.username) ) {
+            return ResponseEntity.badRequest().body(RegisterResponse(false, "username is already taken"))
+        }
+        if ( !customUserDetailsService.isValidEmail(registerRequest.email) ){
+            return ResponseEntity.badRequest().body(RegisterResponse(false, "email is already in use"))
+        }
         val newUserDao = authenticationConverter.registerRequestToUserDao(registerRequest)
-        return customUserDetailsService.createUser(newUserDao)
+        customUserDetailsService.createUser(newUserDao)
+        return ResponseEntity.badRequest().body(RegisterResponse(true, "User registered successfully"))
     }
 }
