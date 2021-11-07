@@ -71,8 +71,6 @@ class WebSecurityConfiguration: WebSecurityConfigurerAdapter() {
 
     @Bean
     fun getPassEncoder(): PasswordEncoder{
-        //TODO change encoding
-
         return BCryptPasswordEncoder()
 //        return NoOpPasswordEncoder.getInstance()
     }
