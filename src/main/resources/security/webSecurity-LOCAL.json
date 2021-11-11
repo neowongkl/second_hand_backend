@@ -13,5 +13,19 @@
     "enable": true,
     "secretKey": "VGhlRW5jb2RlQmFzZTY0TXVzdEJlR3JlYXRlclRoYW4yNTZCaXQhISE=",
     "expiryInMinutes": 90
+  },
+  "oAuth": {
+    "registration": [
+      {
+        "registrationId": "github",
+        "clientId": "fa986cd9bcb0b4407d47",
+        "clientSecret": "d2a84d704a9bb375f68f729bfc5b42b39345f047",
+        "redirectUri": "{baseUrl}/oauth2/callback/{registrationId}",
+        "scope": ["user:email", "read:user"]
+      }
+    ],
+    "authorizedUrlList": [
+      "http://localhost:3000/"
+    ]
   }
 }

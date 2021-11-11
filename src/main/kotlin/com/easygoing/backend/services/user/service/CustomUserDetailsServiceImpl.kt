@@ -43,12 +43,16 @@ class CustomUserDetailsServiceImpl: CustomUserDetailsService {
         }?: true
     }
 
-    override fun createUser(userDao: UserDao) {
-        if (!isValidUserName(userDao.username)){
-            return
-        }
-       userRepository.save(userDao)
-        return
+    override fun createUser(userDao: UserDao): UserDao {
+       return userRepository.save(userDao)
+    }
+
+    override fun updateUser(userDao: UserDao): UserDao{
+        return userRepository.save(userDao)
+    }
+
+    override fun findUserByEmail(email: String): UserDao? {
+        return userRepository.findByemail(email)
     }
 
 }

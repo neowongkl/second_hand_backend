@@ -2,6 +2,7 @@ package com.easygoing.backend.services.core.config.security.util
 
 import com.easygoing.backend.services.core.config.security.dto.CorsMapping
 import com.easygoing.backend.services.core.config.security.dto.Jwt
+import com.easygoing.backend.services.core.config.security.dto.OAuth
 import com.easygoing.backend.services.core.config.security.dto.WebSecurity
 import com.easygoing.backend.services.core.util.DataFormatHelper
 import org.slf4j.LoggerFactory
@@ -26,6 +27,8 @@ class SecurityUtil {
 
     lateinit var corsMappings : List<CorsMapping>
 
+    lateinit var oAuth: OAuth
+
     @PostConstruct
     fun postConstruct(){
         val webSecurity = ClassPathResource(mappingpath).file.let {
@@ -34,9 +37,14 @@ class SecurityUtil {
         if (webSecurity != null){
             corsMappings = webSecurity.corsMappings
             jwt = webSecurity.jwt
+            oAuth = webSecurity.oAuth
         }else{
             logger.error("Web security file not found")
             throw Exception("Web security file not found")
         }
+    }
+
+     fun isAuthorizedRedirectUri(redirectUri: String?): Boolean {
+         return redirectUri != null && oAuth.authorizedUrlList.contains(redirectUri)
     }
 }

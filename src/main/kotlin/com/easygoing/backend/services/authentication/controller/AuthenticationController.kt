@@ -21,7 +21,7 @@ class AuthenticationController {
     private lateinit var authenticationService: AuthenticationService
 
     @RequestMapping(value = ["authenticate"], method = [RequestMethod.POST])
-    fun authenticate(@RequestBody authenticationRequest: AuthenticationRequest): AuthenticationResponse?{
+    fun authenticate(@RequestBody authenticationRequest: AuthenticationRequest ): AuthenticationResponse?{
         return authenticationService.authenticate(authenticationRequest)
     }
 

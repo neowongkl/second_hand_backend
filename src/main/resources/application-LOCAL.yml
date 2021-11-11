@@ -22,16 +22,18 @@ datasource:
     username: root
     password: my-secret-pw
     dialect: org.hibernate.dialect.MariaDB103Dialect
+
 security:
   oauth2:
     client:
-      registration:
-        github:
-          clientId: d3e47fc2ddd966fa4352
-          clientSecret: 3bc0f6b8332f93076354c2a5bada2f5a05aea60d
-          scope:
-            - user:email
-            - read:user
+    registration:
+      github:
+        client-id: fa986cd9bcb0b4407d47
+        client-secret: 3bc0f6b8332f93076354c2a5bada2f5a05aea60d
+        redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+        scope:
+          - user:email
+          - read:user
 
 debug: true
 enableLoggingRequestDetails: true

@@ -3,6 +3,8 @@ package com.easygoing.backend.services.user.dto
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.oauth2.core.user.OAuth2User
+
 
 class CustomUserDetails(
     val userId: Long?,
@@ -11,7 +13,8 @@ class CustomUserDetails(
     private val password: String,
     private val authorities: List<String>,
     private val enable: Boolean,
-    ) : UserDetails {
+    val oAuthAttribute: MutableMap<String, Any>
+    ) : UserDetails, OAuth2User {
 
     private val serialVersionUID = 1L
 
@@ -46,6 +49,14 @@ class CustomUserDetails(
 
     override fun isEnabled(): Boolean {
         return this.enable
+    }
+
+    override fun getAttributes(): MutableMap<String, Any> {
+        return oAuthAttribute
+    }
+
+    override fun getName(): String {
+        return this.username
     }
 
 }

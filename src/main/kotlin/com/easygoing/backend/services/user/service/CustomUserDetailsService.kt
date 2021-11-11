@@ -9,9 +9,9 @@ interface CustomUserDetailsService : UserDetailsService {
 
     @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(usernameOrEmail: String?): UserDetails?
-
     fun isValidUserName(username: String): Boolean
     fun isValidEmail(email: String): Boolean
-
-    fun createUser(userDao: UserDao)
+    fun createUser(userDao: UserDao): UserDao
+    fun updateUser(userDao: UserDao): UserDao
+    fun findUserByEmail(email: String): UserDao?
 }

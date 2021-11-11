@@ -2,7 +2,7 @@ package com.easygoing.backend.services.authentication.converter
 
 import com.easygoing.backend.services.authentication.dto.RegisterRequest
 import com.easygoing.backend.services.user.constant.AuthProvider
-import com.easygoing.backend.services.user.constant.Role
+import com.easygoing.backend.services.user.constant.RoleType
 import com.easygoing.backend.services.user.dao.AuthorityDao
 import com.easygoing.backend.services.user.dao.UserDao
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,7 +25,7 @@ class AuthenticationConverter {
             authProvider = AuthProvider.LOCAL,
             providerId = "831"
         ).apply {
-            this.authorities.add(AuthorityDao(authority = Role.USER.role, user = this))
+            this.authorities.add(AuthorityDao(authority = RoleType.USER.role, user = this))
         }
     }
 

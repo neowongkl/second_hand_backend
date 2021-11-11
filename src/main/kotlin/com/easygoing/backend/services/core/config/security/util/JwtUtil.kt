@@ -23,13 +23,13 @@ class JwtUtil {
 
     //base64 key
     //TheEncodeBase64MustBeGreaterThan256Bit!!!
-    private var SECRET_KEY = "VGhlRW5jb2RlQmFzZTY0TXVzdEJlR3JlYXRlclRoYW4yNTZCaXQhISE="
+    private var secretKey = "VGhlRW5jb2RlQmFzZTY0TXVzdEJlR3JlYXRlclRoYW4yNTZCaXQhISE="
 
     private var expiryInMinutes : Long = 60
 
     @PostConstruct
     fun postConstruct(){
-        SECRET_KEY = securityUtil.jwt.secretKey
+        secretKey = securityUtil.jwt.secretKey
         expiryInMinutes = securityUtil.jwt.expiryInMinutes
     }
 
@@ -55,11 +55,7 @@ class JwtUtil {
             .build().parseClaimsJws(token).body
     }
 
-    private fun isTokenExpired(token: String): Boolean {
-        return extractExpiration(token).isBefore(LocalDateTime.now())
-    }
-
-    fun generateToken(userDetails: UserDetails): String? {
+    fun generateToken(userDetails: UserDetails): String {
         val claims: Map<String, Any> = HashMap()
         return createToken(claims, userDetails.username)
     }
@@ -78,7 +74,7 @@ class JwtUtil {
     }
 
     private fun getSecretKey(): Key {
-        val keyBytes = Decoders.BASE64.decode(SECRET_KEY)
+        val keyBytes = Decoders.BASE64.decode(secretKey)
         return Keys.hmacShaKeyFor(keyBytes)
     }
 
