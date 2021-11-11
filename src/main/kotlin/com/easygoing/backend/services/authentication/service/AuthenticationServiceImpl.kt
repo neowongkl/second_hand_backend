@@ -6,6 +6,8 @@ import com.easygoing.backend.services.authentication.dto.AuthenticationResponse
 import com.easygoing.backend.services.authentication.dto.RegisterRequest
 import com.easygoing.backend.services.authentication.dto.RegisterResponse
 import com.easygoing.backend.services.core.config.security.util.JwtUtil
+import com.easygoing.backend.services.user.constant.RoleType
+import com.easygoing.backend.services.user.dao.AuthorityDao
 import com.easygoing.backend.services.user.service.CustomUserDetailsService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -56,7 +58,8 @@ class AuthenticationServiceImpl: AuthenticationService {
         if ( !customUserDetailsService.isValidEmail(registerRequest.email) ){
             return ResponseEntity.badRequest().body(RegisterResponse(false, "email is already in use"))
         }
-        val newUserDao = authenticationConverter.registerRequestToUserDao(registerRequest)
+        val authorities = listOf(AuthorityDao(authority = RoleType.USER.role))
+        val newUserDao = authenticationConverter.registerRequestToUserDao(registerRequest, authorities)
         customUserDetailsService.createUser(newUserDao)
         return ResponseEntity.badRequest().body(RegisterResponse(true, "User registered successfully"))
     }

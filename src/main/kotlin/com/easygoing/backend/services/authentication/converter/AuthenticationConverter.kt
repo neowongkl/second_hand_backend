@@ -15,8 +15,7 @@ class AuthenticationConverter {
     @Autowired
     private lateinit var passwordEncoder: PasswordEncoder
 
-    //TODO change role assign method
-    fun registerRequestToUserDao(registerRequest: RegisterRequest): UserDao{
+    fun registerRequestToUserDao(registerRequest: RegisterRequest, roles: List<AuthorityDao>): UserDao{
         return UserDao(
             username = registerRequest.username,
             password = passwordEncoder.encode(registerRequest.password),
@@ -25,7 +24,7 @@ class AuthenticationConverter {
             authProvider = AuthProvider.LOCAL,
             providerId = "831"
         ).apply {
-            this.authorities.add(AuthorityDao(authority = RoleType.USER.role, user = this))
+            this.authorities.addAll(roles.onEach { it.user = this })
         }
     }
 
