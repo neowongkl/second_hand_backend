@@ -14,4 +14,5 @@ interface CustomUserDetailsService : UserDetailsService {
     fun createUser(userDao: UserDao): UserDao
     fun updateUser(userDao: UserDao): UserDao
     fun findUserByEmail(email: String): UserDao?
+    fun suggestId(): Long
 }

@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserServ
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Service
+import kotlin.random.Random
 
 @Service
 class CustomOAuth2UserServiceImpl: DefaultOAuth2UserService() {
@@ -46,7 +47,6 @@ class CustomOAuth2UserServiceImpl: DefaultOAuth2UserService() {
         if (oAuth2UserInfo.email.isNullOrBlank()) {
             throw InternalAuthenticationServiceException("Email not found from OAuth2 provider")
         }else{
-            //TODO fix duplicate user name
             val user = customUserDetailsService.findUserByEmail(oAuth2UserInfo.email.toString())
             val curUser = if( user != null ){
                 if ( !user.authProvider.toString().equals(oAuth2UserRequest.clientRegistration.registrationId, ignoreCase = true )){
@@ -62,13 +62,23 @@ class CustomOAuth2UserServiceImpl: DefaultOAuth2UserService() {
     }
 
     private fun updateExistingUser(existingUser: UserDao, oAuth2UserInfo: OAuth2UserInfo): UserDao {
-        existingUser.username = oAuth2UserInfo.name.toString()
+        if( customUserDetailsService.isValidUserName(oAuth2UserInfo.name.toString()) ){
+            existingUser.username = oAuth2UserInfo.name.toString()
+        }else{
+            existingUser.username = oAuth2UserInfo.name.toString() + customUserDetailsService.suggestId().toString()
+        }
         return customUserDetailsService.updateUser(existingUser)
     }
 
     private fun registerNewUser(oAuth2UserInfo: OAuth2UserInfo): UserDao {
         val authorities = listOf(AuthorityDao(authority = RoleType.USER.role))
         val newUser = userConverter.oAuth2UserInfoToUserDao(oAuth2UserInfo, authorities)
+        if( customUserDetailsService.isValidUserName(newUser.username) ){
+            newUser.username = newUser.username
+        }else{
+            newUser.username = newUser.username + customUserDetailsService.suggestId().toString()
+        }
         return customUserDetailsService.createUser(newUser)
     }
+
 }

@@ -55,4 +55,8 @@ class CustomUserDetailsServiceImpl: CustomUserDetailsService {
         return userRepository.findByemail(email)
     }
 
+    override fun suggestId(): Long{
+        return userRepository.count().plus(1)
+    }
+
 }
