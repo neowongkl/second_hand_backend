@@ -61,6 +61,6 @@ class AuthenticationServiceImpl: AuthenticationService {
         val authorities = listOf(AuthorityDao(authority = RoleType.USER.role))
         val newUserDao = authenticationConverter.registerRequestToUserDao(registerRequest, authorities)
         customUserDetailsService.createUser(newUserDao)
-        return ResponseEntity.badRequest().body(RegisterResponse(true, "User registered successfully"))
+        return ResponseEntity.ok().body(RegisterResponse(true, "User registered successfully"))
     }
 }

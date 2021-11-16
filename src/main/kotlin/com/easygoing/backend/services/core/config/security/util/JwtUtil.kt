@@ -4,34 +4,27 @@ import io.jsonwebtoken.*
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
 import java.security.Key
 import java.security.SignatureException
 import java.sql.Timestamp
 import java.time.LocalDateTime
-import javax.annotation.PostConstruct
 
 @Component
+@ConfigurationProperties(prefix = "websecurity.jwt")
 class JwtUtil {
 
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
-    @Autowired
-    private lateinit var securityUtil: SecurityUtil
+    var enable = true
 
     //base64 key
     //TheEncodeBase64MustBeGreaterThan256Bit!!!
     private var secretKey = "VGhlRW5jb2RlQmFzZTY0TXVzdEJlR3JlYXRlclRoYW4yNTZCaXQhISE="
 
     private var expiryInMinutes : Long = 60
-
-    @PostConstruct
-    fun postConstruct(){
-        secretKey = securityUtil.jwt.secretKey
-        expiryInMinutes = securityUtil.jwt.expiryInMinutes
-    }
 
     fun extractUserName(token: String): String {
         return extractClaim(token) { obj: Claims -> obj.subject }

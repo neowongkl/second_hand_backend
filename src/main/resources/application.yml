@@ -2,6 +2,7 @@
 server:
   servlet:
     context-path: /api
+
 spring:
   profiles:
     default: LOCAL
@@ -18,6 +19,7 @@ spring:
   batch:
     jdbc:
       initialize-schema: never
+
 datasource:
   mysql:
     enable: true
@@ -25,6 +27,7 @@ datasource:
   mariadb:
     enable: true
     driverClassName: org.mariadb.jdbc.Driver
+
 webclient:
   sync:
     timeout: PT30S

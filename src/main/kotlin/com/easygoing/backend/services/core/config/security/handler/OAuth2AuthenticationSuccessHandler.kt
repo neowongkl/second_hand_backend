@@ -1,10 +1,10 @@
 package com.easygoing.backend.services.core.config.security.handler
 
+import com.easygoing.backend.services.core.config.security.OAuthConfiguration
 import com.easygoing.backend.services.core.config.security.constant.CookieKey
 import com.easygoing.backend.services.core.config.security.repositroy.HttpCookieOAuth2AuthorizationRequestRepository
 import com.easygoing.backend.services.core.config.security.util.CookieUtil
 import com.easygoing.backend.services.core.config.security.util.JwtUtil
-import com.easygoing.backend.services.core.config.security.util.SecurityUtil
 import com.easygoing.backend.services.core.excpetion.BadRequestException
 import com.easygoing.backend.services.user.dto.CustomUserDetails
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,7 +26,7 @@ class OAuth2AuthenticationSuccessHandler: SimpleUrlAuthenticationSuccessHandler(
     private lateinit var jwtUtil: JwtUtil
 
     @Autowired
-    private lateinit var securityUtil: SecurityUtil
+    private lateinit var oAuthConfiguration: OAuthConfiguration
 
     @Autowired
     private lateinit var httpCookieOAuth2AuthorizationRequestRepository: HttpCookieOAuth2AuthorizationRequestRepository
@@ -51,14 +51,13 @@ class OAuth2AuthenticationSuccessHandler: SimpleUrlAuthenticationSuccessHandler(
         }
     }
 
-
     fun getTargetUrl(
         request: HttpServletRequest,
         response: HttpServletResponse,
         authentication: Authentication
     ): String? {
         val redirectUri = cookieUtil.getCookie(request, redirectUriCookieKey)?.value
-        if ( !securityUtil.isAuthorizedRedirectUri(redirectUri) ) {
+        if ( !oAuthConfiguration.isAuthorizedRedirectUri(redirectUri) ) {
             throw BadRequestException("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication")
         }else{
             val targetUrl = redirectUri.toString()

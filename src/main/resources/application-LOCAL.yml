@@ -2,15 +2,44 @@
 #logging.file.path=
 server:
   port: 8080
-webserity:
+
+websecurity:
   cors:
-    mappingpath: security/webSecurity-LOCAL.json
+    corsMappings:
+      - path: "/**"
+        allowedOrigins:
+          - "*"
+        allowedHeaders:
+          - "*"
+        allowedMethods:
+          - "*"
+        allowCredentials: true
+        exposedHeaders:
+          - "*"
+  jwt:
+    enable: false
+    secretKey: "VGhlRW5jb2RlQmFzZTY0TXVzdEJlR3JlYXRlclRoYW4yNTZCaXQhISE="
+    expiryInMinutes: 90
+  oauth:
+    enable: false
+    registrations:
+      - registrationId: github
+        clientId: fa986cd9bcb0b4407d47
+        clientSecret: d2a84d704a9bb375f68f729bfc5b42b39345f047
+        redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+        scope:
+          - user:email
+          - read:user
+    authorizedUrlList:
+      - http://localhost:3000/
+
 spring:
   jpa:
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+
 datasource:
   mysql:
     url: jdbc:mysql://localhost:3307/demosql?allowPublicKeyRetrieval=true&useSSL=false
@@ -35,6 +64,7 @@ security:
           - user:email
           - read:user
 
+# only for local debugging
 debug: true
 enableLoggingRequestDetails: true
 logging:

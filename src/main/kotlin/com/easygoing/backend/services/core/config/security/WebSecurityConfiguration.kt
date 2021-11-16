@@ -5,7 +5,7 @@ import com.easygoing.backend.services.core.config.security.filter.JwtRequestFilt
 import com.easygoing.backend.services.core.config.security.handler.OAuth2AuthenticationFailureHandler
 import com.easygoing.backend.services.core.config.security.handler.OAuth2AuthenticationSuccessHandler
 import com.easygoing.backend.services.core.config.security.repositroy.HttpCookieOAuth2AuthorizationRequestRepository
-import com.easygoing.backend.services.core.config.security.util.SecurityUtil
+import com.easygoing.backend.services.core.config.security.util.JwtUtil
 import com.easygoing.backend.services.user.service.CustomOAuth2UserServiceImpl
 import com.easygoing.backend.services.user.service.CustomUserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
@@ -40,9 +40,6 @@ class WebSecurityConfiguration: WebSecurityConfigurerAdapter() {
     private lateinit var jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint
 
     @Autowired
-    private lateinit var securityUtil: SecurityUtil
-
-    @Autowired
     private lateinit var customOAuth2UserServiceImpl: CustomOAuth2UserServiceImpl
 
     @Autowired
@@ -57,9 +54,15 @@ class WebSecurityConfiguration: WebSecurityConfigurerAdapter() {
     @Autowired
     private lateinit var clientRegistrationRepository: ClientRegistrationRepository
 
+    @Autowired
+    private lateinit var jwtUtil: JwtUtil
+
+    @Autowired
+    private lateinit var oAuthConfiguration: OAuthConfiguration
+
     override fun configure(http: HttpSecurity?) {
         http?.also { _http->
-            if (securityUtil.jwt.enable){
+            if (jwtUtil.enable){
                 _http
                     .csrf().disable()
                     .formLogin().disable()
@@ -70,27 +73,33 @@ class WebSecurityConfiguration: WebSecurityConfigurerAdapter() {
                     .sessionManagement()
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                         .and()
-                    .authorizeRequests()
-                        .antMatchers("/authentication/**", "/oauth2/authorize/**", "/oauth2/callback/**").permitAll()
-                    .anyRequest()
-                        .authenticated()
-                        .and()
-                    .oauth2Login()
-                        .clientRegistrationRepository(clientRegistrationRepository)//TODO enhance this part
-                        .authorizationEndpoint()
-                            .baseUri("/oauth2/authorize")
-                            .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)
-                            .and()
-                        .redirectionEndpoint()
-                            .baseUri("/oauth2/callback/*")
-                            .and()
-                        .userInfoEndpoint()
-                            .userService(customOAuth2UserServiceImpl)
-                            .and()
-                        .successHandler(oAuth2AuthenticationSuccessHandler)
-                        .failureHandler(oAuth2AuthenticationFailureHandler)
-                _http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter::class.java)
-
+                    .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter::class.java)
+                    .authorizeRequests().let {
+                        if (jwtUtil.enable){
+                            it.antMatchers("/authentication/**").permitAll()
+                        }
+                        if (oAuthConfiguration.enable){//ouath
+                            it.antMatchers("/oauth2/authorize/**", "/oauth2/callback/**").permitAll()
+                        }
+                        it.anyRequest().authenticated().and()
+                    }.also {
+                        if (oAuthConfiguration.enable){//oauth
+                            it.oauth2Login()
+                                .clientRegistrationRepository(clientRegistrationRepository)//TODO enhance this part
+                                .authorizationEndpoint()
+                                .baseUri("/oauth2/authorize")
+                                .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)
+                                .and()
+                                .redirectionEndpoint()
+                                .baseUri("/oauth2/callback/*")
+                                .and()
+                                .userInfoEndpoint()
+                                .userService(customOAuth2UserServiceImpl)
+                                .and()
+                                .successHandler(oAuth2AuthenticationSuccessHandler)
+                                .failureHandler(oAuth2AuthenticationFailureHandler)
+                        }
+                    }
 //http://localhost:8080/api/oauth2/authorize/github?redirect_uri=http://localhost:3000/
             }else{
                 _http.csrf().disable()
