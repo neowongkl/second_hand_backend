@@ -2,6 +2,7 @@ package com.easygoing.backend.services.user.factory
 
 import com.easygoing.backend.services.user.constant.AuthProvider
 import com.easygoing.backend.services.user.dto.GithubOAuth2UserInfo
+import com.easygoing.backend.services.user.dto.GoogleOAuth2UserInfo
 import com.easygoing.backend.services.user.dto.OAuth2UserInfo
 
 class OAuth2UserInfoFactory {
@@ -14,8 +15,8 @@ class OAuth2UserInfoFactory {
                 GithubOAuth2UserInfo(attributes)
 //        } else if (registrationId.equals(AuthProvider.FACEBOOK.toString(), ignoreCase = true)) {
 //            FacebookOAuth2UserInfo(attributes)
-//        } else if (registrationId.equals(AuthProvider.GOOGLE.toString(), ignoreCase = true)) {
-//            GoogleOAuth2UserInfo(attributes)
+            } else if (registrationId.equals(AuthProvider.GOOGLE.toString(), ignoreCase = true)) {
+                GoogleOAuth2UserInfo(attributes)
             } else {
                 throw Exception("$registrationId is not supported yet.")
             }

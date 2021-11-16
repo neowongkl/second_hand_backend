@@ -17,11 +17,11 @@ websecurity:
         exposedHeaders:
           - "*"
   jwt:
-    enable: false
+    enable: true
     secretKey: "VGhlRW5jb2RlQmFzZTY0TXVzdEJlR3JlYXRlclRoYW4yNTZCaXQhISE="
     expiryInMinutes: 90
   oauth:
-    enable: false
+    enable: true
     registrations:
       - registrationId: github
         clientId: fa986cd9bcb0b4407d47
@@ -30,6 +30,13 @@ websecurity:
         scope:
           - user:email
           - read:user
+      - registrationId: google
+        clientId: 952323333916-32g02hqo2ia8gmjmq3f2per14b1qejeo.apps.googleusercontent.com
+        clientSecret: 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
+        redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+        scope:
+          - email
+          - profile
     authorizedUrlList:
       - http://localhost:3000/
 

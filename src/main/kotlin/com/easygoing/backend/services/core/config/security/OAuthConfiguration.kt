@@ -36,7 +36,17 @@ class OAuthConfiguration {
                         .clientId(_registration.clientId)
                         .clientSecret(_registration.clientSecret)
                         .redirectUri(_registration.redirectUri)
-                        .scope(_registration.redirectUri)
+                        .scope(_registration.scope)
+                        .build()
+                )
+            }else if ( _registration.registrationId.equals(AuthProvider.GOOGLE.toString(), ignoreCase = true)){
+                clientRegistrations.add(
+                    CommonOAuth2Provider.GOOGLE
+                        .getBuilder(AuthProvider.GOOGLE.toString().lowercase())
+                        .clientId(_registration.clientId)
+                        .clientSecret(_registration.clientSecret)
+                        .redirectUri(_registration.redirectUri)
+                        .scope(_registration.scope)
                         .build()
                 )
             }
