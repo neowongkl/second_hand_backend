@@ -13,9 +13,18 @@ Supported datasource: mariaDb, mySql
 3. inherit AuditableEntity to create dao for autofill createdBy, createdOn, lastModifiedBy, lastModifiedDate
 
 ## Security Setting
-Edit webSecurity-{env}.json 
+Edit security setting in yaml file
+Every new project need to review WebSecurityConfiguration to check permitted links
+
 ### Cors
-set mapping in json
+set mapping in json for all env
+
 ### Jwt & User
 - set enable jwt and user
 - customize user model for every project
+
+### OAuth
+Implemented Google, GitHub login
+JWT need to enable together with OAuth
+login link sample: /oauth2/authorize/github?redirect_uri=http://localhost:3000/
+  
