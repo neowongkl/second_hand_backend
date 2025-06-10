@@ -63,7 +63,7 @@ class OAuth2AuthenticationSuccessHandler: SimpleUrlAuthenticationSuccessHandler(
             val targetUrl = redirectUri.toString()
             val jwt = jwtUtil.generateToken(authentication.principal as CustomUserDetails)
             response.addHeader("jwt", jwt)
-            return UriComponentsBuilder.fromUriString(targetUrl)
+            return UriComponentsBuilder.fromUriString(targetUrl).queryParam("code", jwt)
                 .build().toUriString()
         }
     }

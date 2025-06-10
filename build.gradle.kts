@@ -50,3 +50,31 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+var activeProfile: String = when {
+	project.hasProperty("LOCAL") -> "LOCAL"
+	project.hasProperty("SIT") -> "SIT"
+	project.hasProperty("UAT") -> "UAT"
+	project.hasProperty("PROD") -> "PROD"
+	else -> "LOCAL"
+}
+
+tasks.bootRun {
+	doFirst {
+		println("Active profile: $activeProfile")
+		args("--spring.profiles.active=$activeProfile")
+	}
+}
+
+tasks.classes {
+	doLast {
+		copy {
+			from("src/main/resources")
+			into("build/resources/main")
+			include("application.yml")
+			filter {
+				it.replace("@spring.profiles.active@", activeProfile)
+			}
+		}
+	}
+}

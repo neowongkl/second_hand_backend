@@ -1,11 +1,12 @@
-# spring.profiles.active=@spring.profiles.active@
+#spring.profiles.active=@spri ng.profiles.active@
 server:
   servlet:
     context-path: /api
 
 spring:
   profiles:
-    default: LOCAL
+#    default: LOCAL
+    active: @spring.profiles.active@
   mvc:
     throw-exception-if-no-handler-found: true
   jackson:
@@ -22,7 +23,7 @@ spring:
 
 datasource:
   mysql:
-    enable: true
+    enable: false
     driverClassName: com.mysql.cj.jdbc.Driver
   mariadb:
     enable: true

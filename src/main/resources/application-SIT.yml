@@ -1,7 +1,7 @@
 #logger
 #logging.file.path=
 server:
-  port: 8080
+  port: 5000
 
 websecurity:
   cors:
@@ -17,11 +17,11 @@ websecurity:
         exposedHeaders:
           - "*"
   jwt:
-    enable: true
+    enable: false
     secretKey: "VGhlRW5jb2RlQmFzZTY0TXVzdEJlR3JlYXRlclRoYW4yNTZCaXQhISE="
     expiryInMinutes: 90
   oauth:
-    enable: true
+    enable: false
     registrations:
       - registrationId: github
         clientId: fa986cd9bcb0b4407d47
@@ -49,15 +49,10 @@ spring:
         format_sql: true
 
 datasource:
-  mysql:
-    url: jdbc:mysql://localhost:3307/demosql?allowPublicKeyRetrieval=true&useSSL=false
-    username: root
-    password: my-secret-pw
-    dialect: org.hibernate.dialect.MySQLDialect
   mariadb:
-    url: jdbc:mariadb://localhost:3306/demo
-    username: root
-    password: my-secret-pw
+    url: jdbc:mariadb://neo-sit-db.cilnjlm7rzxc.ap-southeast-2.rds.amazonaws.com:3306/demo2
+    username: admin
+    password: Admin12345
     dialect: org.hibernate.dialect.MariaDB103Dialect
 
 security:
