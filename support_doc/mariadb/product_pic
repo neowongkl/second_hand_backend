@@ -1,0 +1,12 @@
+CREATE OR REPLACE TABLE product_pic(
+    id bigint auto_increment,
+    productid bigint not null,
+    file_type varchar(5) not null,
+    content LONGBLOB not null,
+    is_profile boolean default false,
+    created_by varchar(255) not null,
+    created_on datetime not null,
+    last_modified_by varchar(255) not null,
+    last_modified_date datetime not null,
+    primary key(id)
+);
